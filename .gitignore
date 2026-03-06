@@ -1,0 +1,25 @@
+# Node
+node_modules/
+dist/
+build/
+.env
+
+# ROS2 Workspace Artifacts
+ika_ws/build/
+ika_ws/install/
+ika_ws/log/
+ika_ws/.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
