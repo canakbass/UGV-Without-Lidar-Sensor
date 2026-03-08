@@ -132,7 +132,7 @@ function App() {
         cmdTopic.publish(msg);
     };
 
-    const sendManualControl = (linear, angular) => {
+    const sendManualControl = (linearX, angularZ, applyBrake = false) => {
         if (!ros.current || !connected || mode !== 'MANUAL') return;
         const cmdVel = new ROSLIB.Topic({
             ros: ros.current,
@@ -140,8 +140,8 @@ function App() {
             messageType: 'geometry_msgs/Twist'
         });
         const twist = new ROSLIB.Message({
-            linear: { x: linear, y: 0, z: 0 },
-            angular: { x: 0, y: 0, z: angular }
+            linear: { x: linearX, y: applyBrake ? 1.0 : 0.0, z: 0 },
+            angular: { x: 0, y: 0, z: angularZ }
         });
         cmdVel.publish(twist);
     };
@@ -154,12 +154,24 @@ function App() {
                 case 's': sendManualControl(-1.0, 0); break;
                 case 'a': sendManualControl(0, 1.0); break;
                 case 'd': sendManualControl(0, -1.0); break;
-                case ' ': sendManualControl(0, 0); break;
+                case ' ': sendManualControl(0, 0, true); break; // FREN
                 default: break;
             }
         };
+        const handleKeyUp = (e) => {
+            if (mode !== 'MANUAL') return;
+            // Space bırakıldığında freni kaldır ve boşa al
+            if (e.key === ' ') {
+                sendManualControl(0, 0, false);
+            }
+        };
+
         window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
     }, [mode, connected]);
 
     const handleStartMission = () => {
