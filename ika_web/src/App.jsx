@@ -5,6 +5,7 @@ import { Joystick, Zap, Gauge, Rotate3D, Navigation, Activity } from 'lucide-rea
 function App() {
     const [connected, setConnected] = useState(false);
     const [mode, setMode] = useState('MANUAL');
+    const [customStage, setCustomStage] = useState('TASLI_YOL');
     const [robotState, setRobotState] = useState('IDLE');
     const [missionActive, setMissionActive] = useState(false);
 
@@ -177,6 +178,7 @@ function App() {
     const handleStartMission = () => {
         if (mode === 'AUTO_NORMAL') sendCommand('START_AUTO_NORMAL');
         if (mode === 'AUTO_ACCEL') sendCommand('START_AUTO_ACCEL');
+        if (mode === 'AUTO_CUSTOM') sendCommand(`START_AUTO_CUSTOM:${customStage}`);
     };
 
     const handleStopMission = () => {
@@ -403,6 +405,42 @@ function App() {
                                     {mode === 'AUTO_ACCEL' && <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>}
                                 </div>
                             </button>
+
+                            <button
+                                onClick={() => setMode('AUTO_CUSTOM')}
+                                disabled={missionActive}
+                                className={`w-full text-left p-3 rounded-lg font-bold transition-all text-sm
+                                    ${mode === 'AUTO_CUSTOM'
+                                        ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-900/20'
+                                        : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-white'}
+                                    ${missionActive ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                <div className="flex justify-between items-center">
+                                    <span>⚙️ AUTO: CUSTOM STAGE</span>
+                                    {mode === 'AUTO_CUSTOM' && <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>}
+                                </div>
+                            </button>
+
+                            {mode === 'AUTO_CUSTOM' && (
+                                <div className="mt-2 p-3 bg-slate-900/50 rounded-lg border border-cyan-500/30">
+                                    <label className="text-[10px] text-slate-400 font-bold tracking-wider mb-1 block">SELECT STARTING STAGE</label>
+                                    <select
+                                        value={customStage}
+                                        onChange={(e) => setCustomStage(e.target.value)}
+                                        disabled={missionActive}
+                                        className="w-full bg-slate-800 text-cyan-400 border border-slate-700 rounded p-2 text-sm font-bold focus:outline-none focus:border-cyan-500"
+                                    >
+                                        <option value="BASLA">1. Başla / Su Geçişi</option>
+                                        <option value="TASLI_YOL">2. Taşlı Yol</option>
+                                        <option value="YAN_EGIM">3. Yan Eğim</option>
+                                        <option value="DIK_ENGEL">4. Dik Engel</option>
+                                        <option value="TRAFIK_KONILERI">5. Trafik Konileri</option>
+                                        <option value="KAYAR_ENGEL">6. Kayar Engel</option>
+                                        <option value="ENGEBELI_ARAZI">7. Engebeli Arazi</option>
+                                        <option value="DIK_EGIM_CIKIS">8. Dik Eğim (Çıkış)</option>
+                                    </select>
+                                </div>
+                            )}
                         </div>
                     </div>
 
