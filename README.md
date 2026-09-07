@@ -30,7 +30,7 @@ Sistem; yüksek çözünürlüklü bir **Unity 3D Dijital İkiz Simülasyonu**, 
 ## 🌟 Öne Çıkan Özellikler (Key Highlights)
 
 - 👁️ **LiDAR'sız Saf Bilgisayarlı Görü (Zero-LiDAR Perception):**
-  - Hough Circle ve Kontur Daireselliği (*Circularity: $4\pi \cdot \text{Area} / \text{Perimeter}^2$*) algoritmaları ile 1-10 arası etap tabelaları, STOP ve HEDEF işaretlerini milisaniyeler içinde ayırt etme.
+  - Hough Circle ve Kontur Daireselliği (`Dairesellik = 4π × Alan / Çevre²`) algoritmaları ile 1-10 arası etap tabelaları, STOP ve HEDEF işaretlerini milisaniyeler içinde ayırt etme.
   - HSV renk uzayında dinamik adaptasyon ile turuncu trafik konileri (slalom) ve hareketli beyaz kayar engelleri segmentasyon yeteneği.
 - 🎮 **Fotogerçekçi Unity 3D Dijital İkiz (Digital Twin):**
   - TEKNOFEST 2026 şartnamesine birebir uygun 10 etaplık 3D parkur modelleri (dik eğim, su geçişi, yan eğim, engebeli zemin, çakıllı yol).
@@ -107,6 +107,53 @@ flowchart TB
     WebBridge <-->|WebSockets| WebDashboard
 ```
 
+### 🧠 10 Etaplı Otonom Karar Verme Akışı (Decision Flowchart)
+
+```mermaid
+flowchart TD
+    Start(["🚀 Başlangıç (IDLE)"]) --> S1["1. BASLA: PID Şerit Ortalama (0.4 m/s)"]
+    S1 --> Check1{"Tabela 2 Tespit?"}
+    Check1 -- Hayır --> S1
+    Check1 -- Evet --> S2["2. TASLI_YOL: Titreşim Filtresi & Yüksek Tork"]
+    
+    S2 --> Check2{"Tabela 3 Tespit?"}
+    Check2 -- Hayır --> S2
+    Check2 -- Evet --> S3["3. YAN_EGIM: IMU Roll Kompanzasyonu & Sağa Yaslanma"]
+    
+    S3 --> Check3{"Tabela 4 Tespit?"}
+    Check3 -- Hayır --> S3
+    Check3 -- Evet --> S4["4. DIK_ENGEL: Ultrasonik Blok Tespiti & Tırmanma"]
+    
+    S4 --> Check4{"Tabela 5 Tespit?"}
+    Check4 -- Hayır --> S4
+    Check4 -- Evet --> S5["5. TRAFIK_KONILERI: HSV Turuncu Segmentasyon & Slalom"]
+    
+    S5 --> Check5{"Tabela 6 Tespit?"}
+    Check5 -- Hayır --> S5
+    Check5 -- Evet --> S6["6. KAYAR_ENGEL: Periyot Analizi & Dinamik Zamanlama"]
+    
+    S6 --> Check6{"Tabela 7 Tespit?"}
+    Check6 -- Hayır --> S6
+    Check6 -- Evet --> S7["7. ENGEBELI_ARAZI: Düşük Hızda Sürünme (0.3 m/s)"]
+    
+    S7 --> Check7{"Tabela 8 Tespit?"}
+    Check7 -- Hayır --> S7
+    Check7 -- Evet --> S8["8. DIK_EGIM_CIKIS: Pitch < -20° Tespiti & Güç Takviyesi (%60)"]
+    
+    S8 --> Stop1{"Platform Düzlüğü?"}
+    Stop1 -- Evet --> S9["9. PLATFORM_ATIS: Duruş & Hedef Tespiti / Sembolik Atış"]
+    
+    S9 --> S10["10. DIK_EGIM_INIS: Geri Vites Darbesi + Sert Frenleme"]
+    S10 --> Finish(["🏁 FINITO: Parkur Tamamlandı (DUR)"])
+
+    classDef stage fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff;
+    classDef check fill:#374151,stroke:#f59e0b,stroke-width:1px,color:#fff;
+    classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff;
+    class S1,S2,S3,S4,S5,S6,S7,S8,S9,S10 stage;
+    class Check1,Check2,Check3,Check4,Check5,Check6,Check7,Stop1 check;
+    class Start,Finish endNode;
+```
+
 ---
 
 ## 🏆 TEKNOFEST 2026 Parkur Etapları ve Otonomi Stratejisi
@@ -120,9 +167,9 @@ flowchart TB
 | **5** | **Trafik Konileri (Slalom)** | Tabela 5 + HSV Turuncu Segmentasyon | Konilerin kütle merkezine göre sağ-sol alternatif slalom açısı |
 | **6** | **Kayar Engel (Dinamik Duvar)** | Tabela 6 + Ön 3x Ultrasonik + Optik Akış | Duvar hareket periyodu analizi, güvenli aralıkta hızlı geçiş |
 | **7** | **Engebeli Arazi** | Tabela 7 + IMU Pitch/Roll Filtresi | Süspansiyon sönümleme için kontrollü sürünme hızı |
-| **8** | **Dik Eğim Çıkış** | Tabela 8 + IMU Pitch < -20° | 2 saniye eğim doğrulama duruşu $\rightarrow$ %60 takviyeli motor gücü ile tırmanma |
-| **9** | **Platform & Hedef Atış** | Platform Tespiti (Pitch $\approx$ 0°) | Platformda tam duruş $\rightarrow$ Lazer hedef kilitlenmesi (3 sn) |
-| **10** | **Dik İniş & Bitiş** | Tabela 10 + IMU Pitch > +20° | Geri vites darbesi ile momentum kırma (0.5s) $\rightarrow$ 2s sert fren $\rightarrow$ Yavaş iniş $\rightarrow$ FİNİTO |
+| **8** | **Dik Eğim Çıkış** | Tabela 8 + IMU Pitch < -20° | 2 saniye eğim doğrulama duruşu → %60 takviyeli motor gücü ile tırmanma |
+| **9** | **Platform & Hedef Atış** | Platform Tespiti (Pitch ≈ 0°) | Platformda tam duruş → Lazer hedef kilitlenmesi (3 sn) |
+| **10** | **Dik İniş & Bitiş** | Tabela 10 + IMU Pitch > +20° | Geri vites darbesi ile momentum kırma (0.5s) → 2s sert fren → Yavaş iniş → FİNİTO |
 
 ---
 
@@ -162,11 +209,8 @@ UGV-Without-Lidar-Sensor/
 │   ├── package.json
 │   └── vite.config.js
 │
-├── docs/                            # Sistem Mimarisi ve Belgeler
-│   ├── diagrams/                    # Karar Akışı ve Veri Akışı SVG Şemaları
-│   │   ├── decision_flowchart.svg
-│   │   └── data_flow_diagram.svg
-│   └── specifications/              # TEKNOFEST 2026 İKA Şartnamesi PDF
+├── docs/                            # Sistem Mimarisi ve Görseller
+│   └── assets/                      # Canlı Simülasyon Animasyonu & HUD Ekran Görüntüleri
 │
 ├── legacy/                          # İlk Prototip Arşivi
 │   └── early_cv_prototype/          # İlk saf OpenCV ve Python test scriptleri
@@ -227,17 +271,13 @@ npm run dev
 ```
 Tarayıcınızda `http://localhost:5173` adresine giderek aracı anlık olarak izleyebilir ve telemetri verilerini görüntüleyebilirsiniz.
 
-## 📊 Sistem Şemaları ve Ekran Görüntüleri
+## 🖥️ Yer Kontrol İstasyonu (GCS Web HUD)
 
 <p align="center">
   <img src="docs/assets/system_hud_preview.png" alt="ROS 2 & Web GCS Dashboard Preview" width="100%" style="border-radius: 8px;" />
   <br>
   <em><b>Yer Kontrol İstasyonu (GCS):</b> ROS 2 Düğümleri, WebSocket Köprüsü ve Canlı Telemetri Paneli</em>
 </p>
-
-- 📄 **[TEKNOFEST 2026 İnsansız Kara Aracı Şartnamesi](docs/specifications/TEKNOFEST_2026_UGV_Spec.pdf)**
-- 🗺️ **[Karar Verme Akış Şeması](docs/diagrams/decision_flowchart.svg)**
-- 🔄 **[Veri Akış Şeması](docs/diagrams/data_flow_diagram.svg)**
 
 ---
 
