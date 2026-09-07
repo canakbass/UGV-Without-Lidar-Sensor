@@ -107,52 +107,35 @@ flowchart TB
     WebBridge <-->|WebSockets| WebDashboard
 ```
 
-### 🧠 10 Etaplı Otonom Karar Verme Akışı (Decision Flowchart)
+<details>
+<summary><b>🧠 10 Etaplı Otonom Karar Verme Akış Şeması (Genişletmek için tıklayın)</b></summary>
+<br>
 
 ```mermaid
-flowchart TD
-    Start(["🚀 Başlangıç (IDLE)"]) --> S1["1. BASLA: PID Şerit Ortalama (0.4 m/s)"]
-    S1 --> Check1{"Tabela 2 Tespit?"}
-    Check1 -- Hayır --> S1
-    Check1 -- Evet --> S2["2. TASLI_YOL: Titreşim Filtresi & Yüksek Tork"]
-    
-    S2 --> Check2{"Tabela 3 Tespit?"}
-    Check2 -- Hayır --> S2
-    Check2 -- Evet --> S3["3. YAN_EGIM: IMU Roll Kompanzasyonu & Sağa Yaslanma"]
-    
-    S3 --> Check3{"Tabela 4 Tespit?"}
-    Check3 -- Hayır --> S3
-    Check3 -- Evet --> S4["4. DIK_ENGEL: Ultrasonik Blok Tespiti & Tırmanma"]
-    
-    S4 --> Check4{"Tabela 5 Tespit?"}
-    Check4 -- Hayır --> S4
-    Check4 -- Evet --> S5["5. TRAFIK_KONILERI: HSV Turuncu Segmentasyon & Slalom"]
-    
-    S5 --> Check5{"Tabela 6 Tespit?"}
-    Check5 -- Hayır --> S5
-    Check5 -- Evet --> S6["6. KAYAR_ENGEL: Periyot Analizi & Dinamik Zamanlama"]
-    
-    S6 --> Check6{"Tabela 7 Tespit?"}
-    Check6 -- Hayır --> S6
-    Check6 -- Evet --> S7["7. ENGEBELI_ARAZI: Düşük Hızda Sürünme (0.3 m/s)"]
-    
-    S7 --> Check7{"Tabela 8 Tespit?"}
-    Check7 -- Hayır --> S7
-    Check7 -- Evet --> S8["8. DIK_EGIM_CIKIS: Pitch < -20° Tespiti & Güç Takviyesi (%60)"]
-    
-    S8 --> Stop1{"Platform Düzlüğü?"}
-    Stop1 -- Evet --> S9["9. PLATFORM_ATIS: Duruş & Hedef Tespiti / Sembolik Atış"]
-    
-    S9 --> S10["10. DIK_EGIM_INIS: Geri Vites Darbesi + Sert Frenleme"]
-    S10 --> Finish(["🏁 FINITO: Parkur Tamamlandı (DUR)"])
+flowchart LR
+    subgraph S1_5 ["Faz 1: Giriş ve Parkur Engelleri"]
+        direction LR
+        S1["1. BASLA<br>PID Şerit Ortalama"] --> S2["2. TASLI YOL<br>Titreşim Filtresi & Tork"]
+        S2 --> S3["3. YAN EGIM<br>IMU Roll Sağa Yaslan"]
+        S3 --> S4["4. DIK ENGEL<br>Ultrasonik Blok Tırman"]
+        S4 --> S5["5. KONILER<br>HSV Turuncu Slalom"]
+    end
 
-    classDef stage fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff;
-    classDef check fill:#374151,stroke:#f59e0b,stroke-width:1px,color:#fff;
-    classDef endNode fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff;
+    subgraph S6_10 ["Faz 2: Dinamik Engeller ve Rampa Etabı"]
+        direction LR
+        S6["6. KAYAR ENGEL<br>Periyot Dinamik Geçiş"] --> S7["7. ENGEBELI<br>Kontrollü Sürünme"]
+        S7 --> S8["8. DIK TIRMANMA<br>Pitch < -20° Güç Takviyesi"]
+        S8 --> S9["9. PLATFORM<br>Hedef Lazer Kilidi"]
+        S9 --> S10["10. DIK INIS<br>Ters Darbe & Fren"]
+    end
+
+    S5 ==>|Geçiş| S6
+
+    classDef stage fill:#1f2937,stroke:#3b82f6,stroke-width:1.5px,color:#fff;
     class S1,S2,S3,S4,S5,S6,S7,S8,S9,S10 stage;
-    class Check1,Check2,Check3,Check4,Check5,Check6,Check7,Stop1 check;
-    class Start,Finish endNode;
 ```
+
+</details>
 
 ---
 
