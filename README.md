@@ -11,6 +11,14 @@
 
 ---
 
+<p align="center">
+  <img src="docs/assets/simulation_demo.gif" alt="Autonomous UGV Simulation Demo" width="100%" style="border-radius: 8px;" />
+  <br>
+  <em><b>Canlı Otonomi Simülasyonu:</b> Unity 3D Dijital İkiz Parkuru, Gerçek Zamanlı Kamera Algılama ve Web Telemetri HUD Arayüzü</em>
+</p>
+
+---
+
 ## 📖 Proje Hakkında (Project Overview)
 
 Bu proje, **TEKNOFEST 2026 İnsansız Kara Aracı (İKA)** yarışması için geliştirilmiş, maliyetli LiDAR sensörlerine ihtiyaç duymadan (**Zero-LiDAR**) çalışan, **Bilgisayarlı Görü (Computer Vision)** ve **Sensör Füzyonu** odaklı tam otonom bir kara aracı mimarisidir.
@@ -219,13 +227,17 @@ npm run dev
 ```
 Tarayıcınızda `http://localhost:5173` adresine giderek aracı anlık olarak izleyebilir ve telemetri verilerini görüntüleyebilirsiniz.
 
----
+## 📊 Sistem Şemaları ve Ekran Görüntüleri
 
-## 📊 Sistem Şemaları ve Belgeler
+<p align="center">
+  <img src="docs/assets/system_hud_preview.png" alt="ROS 2 & Web GCS Dashboard Preview" width="100%" style="border-radius: 8px;" />
+  <br>
+  <em><b>Yer Kontrol İstasyonu (GCS):</b> ROS 2 Düğümleri, WebSocket Köprüsü ve Canlı Telemetri Paneli</em>
+</p>
 
-- 📄 **[TEKNOFEST 2026 İnsansız Kara Aracı Şartnamesi](file:///home/can/.gemini/antigravity-ide/scratch/ugv_consolidation/repo4_ugv_main/docs/specifications/TEKNOFEST_2026_UGV_Spec.pdf)**
-- 🗺️ **[Karar Verme Akış Şeması](file:///home/can/.gemini/antigravity-ide/scratch/ugv_consolidation/repo4_ugv_main/docs/diagrams/decision_flowchart.svg)**
-- 🔄 **[Veri Akış Şeması](file:///home/can/.gemini/antigravity-ide/scratch/ugv_consolidation/repo4_ugv_main/docs/diagrams/data_flow_diagram.svg)**
+- 📄 **[TEKNOFEST 2026 İnsansız Kara Aracı Şartnamesi](docs/specifications/TEKNOFEST_2026_UGV_Spec.pdf)**
+- 🗺️ **[Karar Verme Akış Şeması](docs/diagrams/decision_flowchart.svg)**
+- 🔄 **[Veri Akış Şeması](docs/diagrams/data_flow_diagram.svg)**
 
 ---
 
